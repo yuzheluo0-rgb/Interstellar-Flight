@@ -1,0 +1,49 @@
+{
+  "name": "interstellar-flight",
+  "version": "0.1.0",
+  "description": "Aviation-themed focus timer for deep work",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "package": "electron-builder"
+  },
+  "keywords": [
+    "focus",
+    "productivity",
+    "electron",
+    "timer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "i18next": "^26.3.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.8",
+    "recharts": "^3.8.1",
+    "sql.js": "^1.14.1",
+    "three": "^0.184.0",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.184.1",
+    "@vitejs/plugin-react": "^6.0.2",
+    "electron": "^42.3.3",
+    "electron-builder": "^26.14.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vite-plugin-electron": "^1.0.4",
+    "vitest": "^4.1.8"
+  }
+}

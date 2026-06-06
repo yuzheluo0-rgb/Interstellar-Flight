@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:420px;height:260px;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
+body{background:transparent}
+.card{width:100%;height:100%;border-radius:16px;overflow:hidden;background:rgba(245,243,238,0.97);border:1px solid rgba(0,0,0,0.08);color:#1a2744;display:flex;flex-direction:column;cursor:pointer;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 0}
+.al{display:flex;align-items:center;gap:6px}
+.al-l{width:20px;height:20px;border-radius:50%;background:#1a2744;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px}
+.al-n{font-size:11px;font-weight:800;letter-spacing:2px;color:rgba(26,39,68,0.6)}
+.bp-label{font-size:10px;letter-spacing:1.5px;color:rgba(26,39,68,0.4);font-weight:700}
+.route{display:flex;align-items:center;padding:8px 20px 6px}
+.city{flex:1}
+.city-code{font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1;color:#1a2744}
+.city-cn{font-size:12px;font-weight:600;color:rgba(26,39,68,0.55);margin-top:2px}
+.city-en{font-size:9px;font-weight:500;color:rgba(26,39,68,0.35)}
+.city-r{text-align:right}
+.route-mid{display:flex;flex-direction:column;align-items:center;padding:0 10px;min-width:100px}
+.fn-label{font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(26,39,68,0.4);font-family:monospace}
+.route-line{display:flex;align-items:center;gap:3px;margin:4px 0}
+.rdot{width:6px;height:6px;border-radius:50%;border:2px solid rgba(26,39,68,0.3)}
+.rline{width:22px;height:1.5px;background:rgba(26,39,68,0.15)}
+.rplane{color:#c4a04a;font-size:14px}
+.dur-label{font-size:11px;font-weight:600;color:rgba(26,39,68,0.45)}
+.info{display:flex;padding:6px 20px 8px;gap:14px;border-top:1px dashed rgba(26,39,68,0.1);margin-top:2px}
+.info-item{flex:1}
+.info-label{font-size:9px;font-weight:600;letter-spacing:0.8px;color:rgba(26,39,68,0.35);text-transform:uppercase}
+.info-val{font-size:13px;font-weight:700;color:rgba(26,39,68,0.7);margin-top:2px}
+.timer-box{text-align:right;flex:1.2}
+.timer{font-size:26px;font-family:'Courier New',monospace;font-weight:800;color:#1a2744;letter-spacing:1px}
+.timer-label{font-size:9px;font-weight:600;color:rgba(26,39,68,0.35);letter-spacing:0.8px;text-transform:uppercase}
+.bottom{padding:6px 20px 12px;display:flex;align-items:center;gap:12px}
+.bc{display:flex;align-items:flex-end;gap:0.5px;height:20px;flex:1}
+.bc div{background:rgba(26,39,68,0.5);border-radius:0.5px}
+.progress-wrap{flex:2}
+.pb{width:100%;height:9px;background:rgba(26,39,68,0.06);border-radius:5px;overflow:hidden}
+.pf{height:100%;border-radius:5px;background:linear-gradient(90deg,#c4a04a 0%,#d4b86a 50%,#1a2744 100%);transition:width 0.4s;width:0%}
+.pct{font-size:10px;font-weight:600;color:rgba(26,39,68,0.4);margin-top:2px;text-align:right}
+</style></head><body>
+<div class="card" id="card" title="Click to restore">
+<div class="hdr">
+  <div class="al"><div class="al-l">✈</div><span class="al-n">AETHERVAST</span></div>
+  <span class="bp-label">BOARDING PASS</span>
+</div>
+<div class="route">
+  <div class="city"><div class="city-code" id="fc">---</div><div class="city-cn" id="fcn"></div><div class="city-en" id="fen"></div></div>
+  <div class="route-mid">
+    <div class="fn-label" id="fltn">--------</div>
+    <div class="route-line"><div class="rdot"></div><div class="rline"></div><span class="rplane">✈</span><div class="rline"></div><div class="rdot" style="background:rgba(26,39,68,0.3)"></div></div>
+    <div class="dur-label" id="dur"></div>
+  </div>
+  <div class="city city-r"><div class="city-code" id="tc">---</div><div class="city-cn" id="tcn"></div><div class="city-en" id="ten"></div></div>
+</div>
+<div class="info">
+  <div class="info-item"><div class="info-label">Type</div><div class="info-val" id="ftype">---</div></div>
+  <div class="info-item"><div class="info-label">Class</div><div class="info-val" id="cabin">---</div></div>
+  <div class="timer-box"><div class="timer-label">Remaining</div><div class="timer" id="timer">--:--</div></div>
+</div>
+<div class="bottom">
+  <div class="bc" id="bcode"></div>
+  <div class="progress-wrap"><div class="pb"><div class="pf" id="pf"></div></div><div class="pct" id="pctlbl"></div></div>
+</div>
+</div>
+<script>
+(function(){var bc=document.getElementById('bcode');for(var i=0;i<40;i++){var b=document.createElement('div');b.style.width=(Math.random()>0.7?2.5:1.2)+'px';b.style.height=(30+Math.random()*70)+'%';bc.appendChild(b);}})();
+document.getElementById('card').onclick=function(){require('electron').ipcRenderer.send('window:restoreMain');};
+var typeMap={deep_work:'DEEP WORK',study:'STUDY',creative:'CREATIVE',reading:'READING'};
+var cabinMap={economy:'Economy',business:'Business',first:'First',captain:'Captain',legendary:'Legendary'};
+var lastRealElapsed=-1,staleCount=0,floatStart=0;
+var chimePlayed=false; floatStart=0;
+var wasFlying=false;
+var chime=new Audio('./chime.wav');
+var __localRemaining=-1; var __localDuration=0;
+function poll(){
+  require('electron').ipcRenderer.invoke('getFlightState').then(function(s){
+    if(!s||!s.isFlying){
+      if(wasFlying){
+        wasFlying=false;
+        require('electron').ipcRenderer.send('window:restoreMain');
+      }
+      document.getElementById('fc').textContent='---';
+      document.getElementById('tc').textContent='---';
+      document.getElementById('timer').textContent='--:--';
+      document.getElementById('pf').style.width='0%';
+      document.getElementById('pctlbl').textContent='';
+      floatStart=0;
+      chimePlayed=false;
+    }else{
+      wasFlying=true;
+      document.getElementById('fc').textContent=s.fromCode||'---';
+      document.getElementById('tc').textContent=s.toCode||'---';
+      document.getElementById('fcn').textContent=s.fromName||'';
+      document.getElementById('fen').textContent=s.fromNameEn||'';
+      document.getElementById('tcn').textContent=s.toName||'';
+      document.getElementById('ten').textContent=s.toNameEn||'';
+      document.getElementById('fltn').textContent=s.flightNumber||'';
+      document.getElementById('ftype').textContent=typeMap[s.flightType]||s.flightType||'---';
+      document.getElementById('cabin').textContent=cabinMap[s.cabinClass]||s.cabinClass||'---';
+      var dur=s.plannedDuration||0;
+      if(!floatStart) floatStart=Date.now();
+      var floatElapsed=Math.floor((Date.now()-floatStart)/1000);
+      if(s.elapsed===lastRealElapsed){staleCount++;}else{staleCount=0;lastRealElapsed=s.elapsed;}
+      if(staleCount>=3&&wasFlying){require("electron").ipcRenderer.send("window:restoreMain");return;}
+      var dm=Math.floor(dur/60);
+      document.getElementById("dur").textContent=dm>=60?Math.floor(dm/60)+"h "+dm%60+"m":dm+"m";
+      var pct=dur>0?Math.min(100,Math.round(floatElapsed/dur*100)):0;
+      document.getElementById("pf").style.width=pct+"%";
+      document.getElementById("pctlbl").textContent=pct+"%";
+      var rem=Math.max(0,dur-floatElapsed);
+      var rh=Math.floor(rem/3600),rm=Math.floor(rem%3600/60),rs=rem%60;
+      document.getElementById("timer").textContent=rh>0?(rh+":"+String(rm).padStart(2,"0")+":"+String(rs).padStart(2,"0")):(String(rm).padStart(2,"0")+":"+String(rs).padStart(2,"0"));
+      if(rem<=0&&!chimePlayed){chimePlayed=true;chime.play();}
+    }
+  }).catch(function(){});
+}
+setInterval(poll,1000);
+setTimeout(poll,300);
+</script>
+</body></html>

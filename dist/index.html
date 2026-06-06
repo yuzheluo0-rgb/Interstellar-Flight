@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FocusFlight</title>
+<script type="module" crossorigin src="./assets/index-BSdcaXC4.js"></script>
+<link rel="stylesheet" crossorigin href="./assets/index-58DNKJto.css">
+</head>
+<body class="bg-slate-900 text-white">
+<div id="root"></div>
+<script>
+if (window.electronAPI) {
+  // Safety net: poll for flight end in case endFlight action doesn't fire cleanly
+  var __wasFlying = false;
+  setInterval(function() {
+    var body = document.body.innerText;
+    var isFlying = body.indexOf('飞行中') !== -1 || body.indexOf('Flying') !== -1 || body.indexOf('In Flight') !== -1;
+    if (__wasFlying && !isFlying) {
+      window.electronAPI.clearFlight();
+    }
+    __wasFlying = isFlying;
+  }, 3000);
+}
+</script>
+</body>
+</html>
