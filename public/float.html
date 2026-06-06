@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interstellar Flight</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: transparent;
+    -webkit-app-region: drag;
+    user-select: none;
+  }
+
+  .ticket {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(245,243,238,0.96), rgba(236,233,225,0.94));
+    backdrop-filter: blur(24px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1a2744;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 8px;
+  }
+  .brand-name {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(26,39,68,0.5);
+  }
+  .cabin-badge {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #c4a04a;
+    text-transform: uppercase;
+  }
+
+  .route {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .route-end {
+    flex: 1;
+  }
+  .route-code {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1a2744;
+    line-height: 1;
+  }
+  .route-name {
+    font-size: 8px;
+    color: rgba(26,39,68,0.35);
+    margin-top: 2px;
+  }
+  .route-end.right {
+    text-align: right;
+  }
+  .route-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 12px;
+  }
+  .flight-number {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    color: rgba(26,39,68,0.25);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 3px;
+  }
+  .route-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    border: 1px solid rgba(26,39,68,0.2);
+  }
+  .dot-filled {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(26,39,68,0.3);
+  }
+  .line {
+    width: 32px;
+    height: 0.5px;
+    background: rgba(26,39,68,0.1);
+  }
+  .plane-icon {
+    color: #c4a04a;
+    font-size: 9px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .info-tags {
+    display: flex;
+    gap: 12px;
+  }
+  .info-tag {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    color: rgba(26,39,68,0.25);
+    text-transform: uppercase;
+  }
+  .timer {
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+    color: rgba(26,39,68,0.5);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .barcode {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5px;
+    height: 24px;
+    margin: 8px 0 2px;
+  }
+
+  .progress-wrap {
+    margin-top: auto;
+    padding-top: 2px;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(26,39,68,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #c4a04a 0%, #d4b86a 40%, #1a2744 100%);
+    transition: width 1s ease;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .progress-label {
+    font-size: 7px;
+    color: rgba(26,39,68,0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .placeholder {
+    color: rgba(26,39,68,0.18);
+  }
+</style>
+</head>
+<body>
+<div class="ticket" id="ticket">
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon">&#9992;</div>
+      <span class="brand-name">AETHERVAST</span>
+    </div>
+    <span class="cabin-badge" id="cabinBadge">ECONOMY</span>
+  </div>
+
+  <!-- Route -->
+  <div class="route">
+    <div class="route-end">
+      <div class="route-code" id="fromCode">---</div>
+      <div class="route-name" id="fromName">Departure</div>
+    </div>
+    <div class="route-center">
+      <div class="flight-number" id="flightNumber">---</div>
+      <div class="route-line">
+        <span class="dot"></span>
+        <span class="line"></span>
+        <span class="plane-icon">&#9992;</span>
+        <span class="line"></span>
+        <span class="dot-filled"></span>
+      </div>
+    </div>
+    <div class="route-end right">
+      <div class="route-code" id="toCode">---</div>
+      <div class="route-name" id="toName">Arrival</div>
+    </div>
+  </div>
+
+  <!-- Info row -->
+  <div class="info-row">
+    <div class="info-tags">
+      <span class="info-tag">Gate A12</span>
+      <span class="info-tag">Seat 8A</span>
+    </div>
+    <span class="timer" id="timerDisplay">--:--</span>
+  </div>
+
+  <!-- Barcode -->
+  <div class="barcode" id="barcode"></div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-labels">
+      <span class="progress-label" id="progressFrom">---</span>
+      <span class="progress-label" id="progressPct">0%</span>
+      <span class="progress-label" id="progressTo">---</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const { ipcRenderer } = require('electron');
+
+  /* ── Barcode generation ── */
+  (function renderBarcode() {
+    const container = document.getElementById('barcode');
+    const count = 40;
+    for (let i = 0; i < count; i++) {
+      const bar = document.createElement('div');
+      const w = Math.random() > 0.7 ? 0.25 : 0.12;
+      const h = 0.35 + Math.random() * 0.65;
+      bar.style.width = (w * 3) + 'px';
+      bar.style.height = (h * 100) + '%';
+      bar.style.background = 'rgba(26,39,68,0.6)';
+      bar.style.borderRadius = '0.5px';
+      bar.style.flexShrink = '0';
+      container.appendChild(bar);
+    }
+  })();
+
+  /* ── State ── */
+  let floatStart = null;         // Date.now() when flight began
+  let plannedDuration = 0;       // total seconds planned
+  let prevElapsed = null;       // previous s.elapsed value
+  let staleCount = 0;           // consecutive polls with no change
+  let flightActive = false;     // whether we have a flight
+  const STALE_LIMIT = 3;
+
+  /* ── Click restores main window ── */
+  document.getElementById('ticket').addEventListener('click', function () {
+    try {
+      ipcRenderer.send('window:restoreMain');
+    } catch (e) {
+      // ignore
+    }
+  });
+
+  /* ── DOM helpers ── */
+  const $ = id => document.getElementById(id);
+  const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+
+  /* ── Timer tick ── */
+  function tick() {
+    if (!flightActive) return;
+    const now = Date.now();
+    const elapsedLocal = (now - floatStart) / 1000;
+    const remaining = Math.max(0, plannedDuration - elapsedLocal);
+    const rm = Math.floor(remaining / 60);
+    const rs = Math.floor(remaining % 60);
+    setText('timerDisplay', String(rm).padStart(2, '0') + ':' + String(rs).padStart(2, '0'));
+
+    const pct = Math.min(100, Math.round((elapsedLocal / plannedDuration) * 100));
+    const fill = $('progressFill');
+    if (fill) fill.style.width = pct + '%';
+    setText('progressPct', pct + '%');
+
+    /* chime when countdown reaches 0 */
+    if (remaining <= 0 && plannedDuration > 0) {
+      try {
+        new Audio('./chime.wav').play();
+      } catch (e) { /* ignore */ }
+    }
+  }
+
+  /* ── Poll flight state from main process ── */
+  async function poll() {
+    try {
+      const s = await ipcRenderer.invoke('getFlightState');
+      if (!s || !s.currentFlight) {
+        /* No active flight ── show placeholders */
+        flightActive = false;
+        floatStart = null;
+        plannedDuration = 0;
+        setText('fromCode', '---');
+        setText('toCode', '---');
+        setText('fromName', 'Departure');
+        setText('toName', 'Arrival');
+        setText('flightNumber', '---');
+        setText('timerDisplay', '--:--');
+        setText('progressFrom', '---');
+        setText('progressTo', '---');
+        setText('progressPct', '0%');
+        const fill = $('progressFill');
+        if (fill) fill.style.width = '0%';
+        setText('cabinBadge', 'ECONOMY');
+        prevElapsed = null;
+        staleCount = 0;
+        return;
+      }
+
+      flightActive = true;
+      const f = s.currentFlight;
+
+      /* Update route info */
+      setText('fromCode', (f.departureCityCode || '---'));
+      setText('toCode', (f.arrivalCityCode || '---'));
+      setText('fromName', (f.departureCityName || 'Departure'));
+      setText('toName', (f.arrivalCityName || 'Arrival'));
+      setText('flightNumber', (f.flightNumber || '---'));
+      setText('progressFrom', (f.departureCityName || ''));
+      setText('progressTo', (f.arrivalCityName || ''));
+
+      /* Cabin class via stats */
+      const totalMileage = s.stats ? s.stats.totalMileage : 0;
+      /* mirror the logic from getCabinClassForMileage */
+      let cabin = 'ECONOMY';
+      if (totalMileage >= 10000000) cabin = 'LEGENDARY';
+      else if (totalMileage >= 5000000) cabin = 'CAPTAIN';
+      else if (totalMileage >= 1000000) cabin = 'FIRST';
+      else if (totalMileage >= 500000) cabin = 'BUSINESS';
+      setText('cabinBadge', cabin);
+
+      /* Initialize local timer on first poll or when flight changes */
+      if (!floatStart || s.elapsed === 0) {
+        floatStart = Date.now() - (s.elapsed * 1000);
+        plannedDuration = f.plannedDuration;
+      }
+
+      /* Stale detection ── if elapsed hasn't changed, count */
+      if (prevElapsed !== null && s.elapsed === prevElapsed) {
+        staleCount++;
+        if (staleCount >= STALE_LIMIT) {
+          ipcRenderer.send('window:restoreMain');
+          staleCount = 0;
+        }
+      } else {
+        staleCount = 0;
+      }
+      prevElapsed = s.elapsed;
+
+      /* If plannedDuration is available, run the local tick */
+      if (plannedDuration > 0) {
+        tick();
+      }
+
+    } catch (e) {
+      // poll failed, do nothing
+    }
+  }
+
+  /* ── Start polling ── */
+  setInterval(poll, 1000);
+  poll(); // immediate first poll
+</script>
+</body>
+</html>

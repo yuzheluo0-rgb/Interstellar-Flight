@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-electron/
+*.exe
+*.dll
+*.bin
+*.dat
+*.pak
