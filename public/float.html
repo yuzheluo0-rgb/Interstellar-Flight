@@ -287,9 +287,13 @@
   async function poll() {
     try {
       var s = await ipcRenderer.invoke('getFlightState');
-      if (!s || !s.isFlying) {
+      if (s && !s.isFlying) {
         if (wasActive) { wasActive = false; if (!chimed) playChime(); setTimeout(function() { resetUI(); try { ipcRenderer.send('window:restoreMain'); } catch(e) {} }, chimed ? 800 : 2200); return; }
         wasActive = false; resetUI(); return;
+      }
+      if (!s) {
+        if (flightActive && plannedDuration > 0) tick();
+        return;
       }
       wasActive = true; flightActive = true;
       setText('fromCode', s.departureCityCode || '---');
