@@ -200,9 +200,8 @@
   })();
 
   /* ── State ── */
-  var floatStart = null, plannedDuration = 0, prevElapsed = null;
-  var staleCount = 0, flightActive = false, wasActive = false, chimed = false;
-  var STALE_LIMIT = 30;
+  var floatStart = null, plannedDuration = 0;
+  var flightActive = false, wasActive = false, chimed = false;
 
   /* ── Build WAV ── */
   function buildChimeWav() {
@@ -280,7 +279,6 @@
     var fill = $('progressFill'); if (fill) fill.style.width = '0%';
     var plane = $('progressPlane'); if (plane) plane.style.left = '0%';
     setText('cabinBadge', 'ECONOMY');
-    prevElapsed = null; staleCount = 0;
   }
 
   /* ── Poll ── */
@@ -313,9 +311,6 @@
         plannedDuration = s.plannedDuration;
         chimed = false;
       }
-      if (prevElapsed !== null && s.elapsed === prevElapsed) { staleCount++; if (staleCount >= STALE_LIMIT) { ipcRenderer.send('window:restoreMain'); staleCount = 0; } }
-      else { staleCount = 0; }
-      prevElapsed = s.elapsed;
       if (plannedDuration > 0) tick();
     } catch (e) {}
   }
