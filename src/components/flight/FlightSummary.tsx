@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { CabinClass, FlightType, FlightStatus } from '../../utils/mileage';
-import { getRankForMileage } from '../../utils/mileage';
+import { getRatingForDuration } from '../../utils/mileage';
+import { getCityById } from '../../data/routes';
 
 interface FlightSummaryProps {
   flightNumber: string;
@@ -63,12 +64,14 @@ export default function FlightSummary({
     [],
   );
 
-  const prevTotal = totalMileage - mileageEarned;
-  const prevRank = getRankForMileage(prevTotal);
-  const newRank = getRankForMileage(totalMileage);
-  const promoted = prevRank.level < newRank.level;
-
+  const rating = getRatingForDuration(actualDuration / 60);
   const isCompleted = status === 'completed';
+  const fromCity = getCityById(departureCity);
+  const toCity = getCityById(arrivalCity);
+  const fromName = fromCity?.name || departureCity;
+  const toName = toCity?.name || arrivalCity;
+  const fromCode = fromCity?.code || departureCity;
+  const toCode = toCity?.code || arrivalCity;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
@@ -88,7 +91,8 @@ export default function FlightSummary({
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="flex flex-col items-center">
               <span className="text-lg">&#127758;</span>
-              <span className="text-sm font-bold">{departureCity}</span>
+              <span className="text-lg font-bold">{fromCode}</span>
+              <span className="text-[9px] text-slate-400">{fromName}</span>
             </div>
             <div className="flex flex-col items-center gap-0.5">
               <span className="text-[10px] font-mono text-slate-400">{flightNumber}</span>
@@ -105,7 +109,8 @@ export default function FlightSummary({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-lg">&#127759;</span>
-              <span className="text-sm font-bold">{arrivalCity}</span>
+              <span className="text-lg font-bold">{toCode}</span>
+              <span className="text-[9px] text-slate-400">{toName}</span>
             </div>
           </div>
 
@@ -141,19 +146,10 @@ export default function FlightSummary({
               <div className="font-bold text-white">{today}</div>
             </div>
             <div className="bg-slate-700/50 rounded-lg p-2.5 text-center">
-              <div className="text-[9px] text-slate-400 uppercase tracking-wider">Rank</div>
-              <div className="font-bold text-white">{newRank.nameEn.toUpperCase()}</div>
+              <div className="text-[9px] text-slate-400 uppercase tracking-wider">Rating</div>
+              <div className="font-bold text-white text-lg">{rating.icon}</div>
             </div>
           </div>
-
-          {/* Promotion banner */}
-          {promoted && (
-            <div className="mb-3 py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30 text-center">
-              <span className="text-amber-400 text-xs font-bold">
-                &#11088; PROMOTED! {prevRank.nameEn.toUpperCase()} &rarr; {newRank.nameEn.toUpperCase()}
-              </span>
-            </div>
-          )}
 
           {/* Barcode */}
           <div className="flex items-end justify-center gap-px mb-1">

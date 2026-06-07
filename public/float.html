@@ -1,202 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interstellar Flight</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: transparent;
-    -webkit-app-region: drag;
-    user-select: none;
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: transparent; -webkit-app-region: drag; user-select: none;
   }
+
+  /* ── Theme: Dark Nebula (default) ── */
+  .theme-dark { --bg: rgba(10,15,30,0.88); --border: rgba(255,255,255,0.12); --brand: rgba(210,220,240,0.6); --brand-icon-bg: radial-gradient(circle at 30% 30%, #3b5998, #1a2744); --brand-icon-color: #f0d060; --brand-glow: 0 0 10px rgba(100,140,220,0.3); --code-color: #ffffff; --code-glow: 0 0 12px rgba(200,210,255,0.5), 0 0 30px rgba(150,170,255,0.2); --name-color: rgba(180,195,220,0.5); --flight-color: rgba(180,195,220,0.35); --dot-border: rgba(255,255,255,0.15); --dot-fill: rgba(240,208,96,0.5); --dot-fill-glow: 0 0 4px rgba(240,208,96,0.3); --line-bg: rgba(255,255,255,0.08); --plane-color: #f0d060; --plane-glow: 0 0 6px rgba(240,208,96,0.4); --tag-color: rgba(180,195,220,0.3); --timer-color: #ffffff; --timer-glow: 0 0 10px rgba(180,200,255,0.4), 0 0 20px rgba(120,160,255,0.15); --bar-track: rgba(255,255,255,0.06); --bar-fill: linear-gradient(90deg, #f0d060 0%, #e8c84a 30%, #a0b8f0 70%, #7090e0 100%); --bar-glow: 0 0 6px rgba(200,180,100,0.3); --label-color: rgba(180,195,220,0.25); --cabin-color: #f0d060; --cabin-glow: 0 0 8px rgba(240,208,96,0.4); --barcode-color: rgba(255,255,255,0.25); }
+
+  /* ── Theme: Golden Horizon ── */
+  .theme-gold { --bg: rgba(20,15,5,0.85); --border: rgba(255,200,100,0.15); --brand: rgba(240,210,160,0.6); --brand-icon-bg: radial-gradient(circle at 30% 30%, #c4a04a, #8a6020); --brand-icon-color: #ffe8c0; --brand-glow: 0 0 10px rgba(200,150,60,0.3); --code-color: #ffe8c0; --code-glow: 0 0 12px rgba(255,200,120,0.5), 0 0 30px rgba(220,160,80,0.2); --name-color: rgba(220,190,140,0.5); --flight-color: rgba(200,170,120,0.35); --dot-border: rgba(255,200,120,0.2); --dot-fill: rgba(255,180,60,0.6); --dot-fill-glow: 0 0 4px rgba(255,180,60,0.4); --line-bg: rgba(255,200,120,0.1); --plane-color: #ffc060; --plane-glow: 0 0 6px rgba(255,180,60,0.5); --tag-color: rgba(220,190,140,0.3); --timer-color: #fff0d0; --timer-glow: 0 0 10px rgba(255,180,80,0.4), 0 0 20px rgba(200,140,40,0.15); --bar-track: rgba(255,200,120,0.06); --bar-fill: linear-gradient(90deg, #f0a030 0%, #f0c060 30%, #ffe0a0 70%, #ffd080 100%); --bar-glow: 0 0 6px rgba(240,160,40,0.4); --label-color: rgba(220,190,140,0.25); --cabin-color: #ffc060; --cabin-glow: 0 0 8px rgba(255,180,60,0.5); --barcode-color: rgba(255,200,120,0.3); }
+
+  /* ── Theme: Frost ── */
+  .theme-frost { --bg: rgba(5,15,25,0.85); --border: rgba(100,200,255,0.15); --brand: rgba(150,210,240,0.6); --brand-icon-bg: radial-gradient(circle at 30% 30%, #60b0e0, #1a4a6a); --brand-icon-color: #e0f0ff; --brand-glow: 0 0 10px rgba(80,180,230,0.3); --code-color: #e0f0ff; --code-glow: 0 0 12px rgba(150,220,255,0.5), 0 0 30px rgba(100,180,230,0.2); --name-color: rgba(140,200,230,0.5); --flight-color: rgba(120,180,220,0.35); --dot-border: rgba(100,200,255,0.2); --dot-fill: rgba(80,200,255,0.6); --dot-fill-glow: 0 0 4px rgba(80,200,255,0.4); --line-bg: rgba(100,200,255,0.08); --plane-color: #80d0ff; --plane-glow: 0 0 6px rgba(80,200,255,0.5); --tag-color: rgba(140,200,230,0.3); --timer-color: #e0f4ff; --timer-glow: 0 0 10px rgba(80,200,255,0.4), 0 0 20px rgba(40,160,220,0.15); --bar-track: rgba(100,200,255,0.06); --bar-fill: linear-gradient(90deg, #40a0e0 0%, #60c0f0 40%, #a0e0ff 70%, #80d0f0 100%); --bar-glow: 0 0 6px rgba(60,160,220,0.4); --label-color: rgba(140,200,230,0.25); --cabin-color: #80d0ff; --cabin-glow: 0 0 8px rgba(80,200,255,0.5); --barcode-color: rgba(100,200,255,0.25); }
+
+  /* ── Theme: Ember ── */
+  .theme-ember { --bg: rgba(20,8,5,0.85); --border: rgba(255,100,80,0.15); --brand: rgba(240,150,120,0.6); --brand-icon-bg: radial-gradient(circle at 30% 30%, #e05030, #8a2010); --brand-icon-color: #ffd0c0; --brand-glow: 0 0 10px rgba(220,80,40,0.3); --code-color: #ffd0c0; --code-glow: 0 0 12px rgba(255,120,80,0.5), 0 0 30px rgba(220,80,40,0.2); --name-color: rgba(220,140,120,0.5); --flight-color: rgba(200,120,100,0.35); --dot-border: rgba(255,100,80,0.2); --dot-fill: rgba(255,80,60,0.6); --dot-fill-glow: 0 0 4px rgba(255,80,60,0.4); --line-bg: rgba(255,100,80,0.08); --plane-color: #ff7060; --plane-glow: 0 0 6px rgba(255,80,60,0.5); --tag-color: rgba(220,140,120,0.3); --timer-color: #ffe0d8; --timer-glow: 0 0 10px rgba(255,100,60,0.4), 0 0 20px rgba(200,60,30,0.15); --bar-track: rgba(255,100,80,0.06); --bar-fill: linear-gradient(90deg, #e04030 0%, #f06040 40%, #ffa080 70%, #f08060 100%); --bar-glow: 0 0 6px rgba(220,60,40,0.4); --label-color: rgba(220,140,120,0.25); --cabin-color: #ff7060; --cabin-glow: 0 0 8px rgba(255,80,60,0.5); --barcode-color: rgba(255,100,80,0.25); }
+
+  /* ── Theme: Verdant ── */
+  .theme-verdant { --bg: rgba(5,18,10,0.85); --border: rgba(60,200,100,0.15); --brand: rgba(130,210,160,0.6); --brand-icon-bg: radial-gradient(circle at 30% 30%, #40a060, #1a5020); --brand-icon-color: #d0ffe0; --brand-glow: 0 0 10px rgba(40,160,80,0.3); --code-color: #d0ffe0; --code-glow: 0 0 12px rgba(80,220,120,0.5), 0 0 30px rgba(40,160,80,0.2); --name-color: rgba(120,200,150,0.5); --flight-color: rgba(100,180,130,0.35); --dot-border: rgba(60,200,100,0.2); --dot-fill: rgba(40,220,80,0.6); --dot-fill-glow: 0 0 4px rgba(40,220,80,0.4); --line-bg: rgba(60,200,100,0.08); --plane-color: #60e080; --plane-glow: 0 0 6px rgba(40,220,80,0.5); --tag-color: rgba(120,200,150,0.3); --timer-color: #d0ffe0; --timer-glow: 0 0 10px rgba(40,220,80,0.4), 0 0 20px rgba(20,160,60,0.15); --bar-track: rgba(60,200,100,0.06); --bar-fill: linear-gradient(90deg, #30a050 0%, #40c060 40%, #80f0a0 70%, #60d080 100%); --bar-glow: 0 0 6px rgba(30,160,60,0.4); --label-color: rgba(120,200,150,0.25); --cabin-color: #60e080; --cabin-glow: 0 0 8px rgba(40,220,80,0.5); --barcode-color: rgba(60,200,100,0.25); }
 
   .ticket {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    background: linear-gradient(135deg, rgba(245,243,238,0.96), rgba(236,233,225,0.94));
-    backdrop-filter: blur(24px);
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.25);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    width: 100%; height: 100%; padding: 16px 18px;
+    background: var(--bg);
+    backdrop-filter: blur(30px) saturate(140%);
+    -webkit-backdrop-filter: blur(30px) saturate(140%);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
   }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+  /* ── Theme dots ── */
+  .theme-dots {
+    position: absolute; top: 8px; right: 12px;
+    display: flex; gap: 5px; z-index: 10;
+    -webkit-app-region: no-drag;
   }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .theme-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer; transition: all 0.2s;
+    background: transparent;
   }
+  .theme-dot.active { background: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.4); box-shadow: 0 0 4px rgba(255,255,255,0.2); }
+  .theme-dot:hover { border-color: rgba(255,255,255,0.4); }
+
+  /* ── Common elements using vars ── */
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .brand { display: flex; align-items: center; gap: 8px; }
   .brand-icon {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #1a2744;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 8px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--brand-icon-bg);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--brand-icon-color); font-size: 12px;
+    box-shadow: var(--brand-glow);
   }
-  .brand-name {
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: rgba(26,39,68,0.5);
-  }
-  .cabin-badge {
-    font-size: 7px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: #c4a04a;
-    text-transform: uppercase;
-  }
+  .brand-name { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; color: var(--brand); text-transform: uppercase; }
+  .cabin-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; color: var(--cabin-color); text-shadow: var(--cabin-glow); text-transform: uppercase; }
 
-  .route {
-    display: flex;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-  .route-end {
-    flex: 1;
-  }
-  .route-code {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #1a2744;
-    line-height: 1;
-  }
-  .route-name {
-    font-size: 8px;
-    color: rgba(26,39,68,0.35);
-    margin-top: 2px;
-  }
-  .route-end.right {
-    text-align: right;
-  }
-  .route-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 12px;
-  }
-  .flight-number {
-    font-size: 7px;
-    letter-spacing: 0.1em;
-    color: rgba(26,39,68,0.25);
-    font-family: 'Courier New', monospace;
-    margin-bottom: 3px;
-  }
-  .route-line {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    border: 1px solid rgba(26,39,68,0.2);
-  }
-  .dot-filled {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgba(26,39,68,0.3);
-  }
-  .line {
-    width: 32px;
-    height: 0.5px;
-    background: rgba(26,39,68,0.1);
-  }
-  .plane-icon {
-    color: #c4a04a;
-    font-size: 9px;
-  }
+  .route { display: flex; align-items: center; margin-bottom: 10px; }
+  .route-end { flex: 1; }
+  .route-code { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; line-height: 1; color: var(--code-color); text-shadow: var(--code-glow); }
+  .route-name { font-size: 9px; color: #ffffff; text-shadow: 0 0 5px rgba(255,255,255,0.4), 0 0 10px rgba(255,255,255,0.15); margin-top: 3px; }
+  .route-end.right { text-align: right; }
+  .route-center { display: flex; flex-direction: column; align-items: center; padding: 0 14px; }
+  .flight-number { font-size: 8px; letter-spacing: 0.12em; color: var(--flight-color); font-family: 'Courier New', monospace; margin-bottom: 6px; }
+  .route-line { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; border: 1px solid var(--dot-border); }
+  .dot-filled { width: 5px; height: 5px; border-radius: 50%; background: var(--dot-fill); box-shadow: var(--dot-fill-glow); }
+  .line { width: 28px; height: 1px; background: var(--line-bg); }
+  .plane-icon { color: var(--plane-color); font-size: 10px; text-shadow: var(--plane-glow); }
 
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  .info-tags {
-    display: flex;
-    gap: 12px;
-  }
-  .info-tag {
-    font-size: 7px;
-    letter-spacing: 0.1em;
-    color: rgba(26,39,68,0.25);
-    text-transform: uppercase;
-  }
-  .timer {
-    font-size: 12px;
-    font-family: 'Courier New', monospace;
-    font-weight: 500;
-    color: rgba(26,39,68,0.5);
-    font-variant-numeric: tabular-nums;
-  }
+  .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .info-tags { display: flex; gap: 14px; }
+  .info-tag { font-size: 8px; letter-spacing: 0.12em; color: #ffffff; text-shadow: 0 0 6px rgba(255,255,255,0.5), 0 0 12px rgba(255,255,255,0.2); text-transform: uppercase; }
+  .timer { font-size: 18px; font-family: 'SF Mono', 'Cascadia Code', 'Courier New', monospace; font-weight: 600; color: var(--timer-color); text-shadow: var(--timer-glow); font-variant-numeric: tabular-nums; }
 
-  .barcode {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.5px;
-    height: 24px;
-    margin: 8px 0 2px;
-  }
+  .progress-wrap { margin-top: auto; padding-top: 4px; }
+  .progress-bar { width: 100%; height: 5px; background: var(--bar-track); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 999px; background: var(--bar-fill); box-shadow: var(--bar-glow); transition: width 1s ease; }
+  .progress-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+  .progress-label { font-size: 7px; color: var(--label-color); text-transform: uppercase; letter-spacing: 0.06em; }
 
-  .progress-wrap {
-    margin-top: auto;
-    padding-top: 2px;
-  }
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(26,39,68,0.06);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #c4a04a 0%, #d4b86a 40%, #1a2744 100%);
-    transition: width 1s ease;
-  }
-  .progress-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 4px;
-  }
-  .progress-label {
-    font-size: 7px;
-    color: rgba(26,39,68,0.2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+  .barcode { display: flex; align-items: flex-end; gap: 0.5px; height: 20px; margin: 6px 0 0; opacity: 0.3; }
+  .barcode div { background: var(--barcode-color); border-radius: 0.5px; flex-shrink: 0; }
 
-  .placeholder {
-    color: rgba(26,39,68,0.18);
+  .progress-plane {
+    position: absolute; top: -8px;
+    font-size: 10px; transform: translateX(-50%);
+    transition: left 1s ease;
+    text-shadow: 0 0 4px rgba(255,255,255,0.4);
+    pointer-events: none;
+    z-index: 2;
   }
 </style>
 </head>
 <body>
-<div class="ticket" id="ticket">
-  <!-- Header -->
+
+<div class="ticket theme-dark" id="ticket">
+  <!-- Theme switcher dots -->
+  <div class="theme-dots" id="themeDots">
+    <span class="theme-dot active" data-theme="dark" title="暗星云"></span>
+    <span class="theme-dot" data-theme="gold" title="金辉航线"></span>
+    <span class="theme-dot" data-theme="frost" title="霜境"></span>
+    <span class="theme-dot" data-theme="ember" title="余烬"></span>
+    <span class="theme-dot" data-theme="verdant" title="苍翠"></span>
+  </div>
+
   <div class="header">
     <div class="brand">
       <div class="brand-icon">&#9992;</div>
@@ -205,7 +122,6 @@
     <span class="cabin-badge" id="cabinBadge">ECONOMY</span>
   </div>
 
-  <!-- Route -->
   <div class="route">
     <div class="route-end">
       <div class="route-code" id="fromCode">---</div>
@@ -214,11 +130,9 @@
     <div class="route-center">
       <div class="flight-number" id="flightNumber">---</div>
       <div class="route-line">
-        <span class="dot"></span>
-        <span class="line"></span>
+        <span class="dot"></span><span class="line"></span>
         <span class="plane-icon">&#9992;</span>
-        <span class="line"></span>
-        <span class="dot-filled"></span>
+        <span class="line"></span><span class="dot-filled"></span>
       </div>
     </div>
     <div class="route-end right">
@@ -227,22 +141,18 @@
     </div>
   </div>
 
-  <!-- Info row -->
   <div class="info-row">
     <div class="info-tags">
-      <span class="info-tag">Gate A12</span>
-      <span class="info-tag">Seat 8A</span>
+      <span class="info-tag">GATE A12</span>
+      <span class="info-tag">SEAT 8A</span>
     </div>
     <span class="timer" id="timerDisplay">--:--</span>
   </div>
 
-  <!-- Barcode -->
-  <div class="barcode" id="barcode"></div>
-
-  <!-- Progress -->
   <div class="progress-wrap">
-    <div class="progress-bar">
+    <div class="progress-bar" style="position:relative">
       <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      <span class="progress-plane" id="progressPlane" style="left:0%">&#9992;</span>
     </div>
     <div class="progress-labels">
       <span class="progress-label" id="progressFrom">---</span>
@@ -250,151 +160,170 @@
       <span class="progress-label" id="progressTo">---</span>
     </div>
   </div>
+
+  <div class="barcode" id="barcode"></div>
 </div>
 
 <script>
-  const { ipcRenderer } = require('electron');
+  var ipcRenderer = require('electron').ipcRenderer;
 
-  /* ── Barcode generation ── */
-  (function renderBarcode() {
-    const container = document.getElementById('barcode');
-    const count = 40;
-    for (let i = 0; i < count; i++) {
-      const bar = document.createElement('div');
-      const w = Math.random() > 0.7 ? 0.25 : 0.12;
-      const h = 0.35 + Math.random() * 0.65;
-      bar.style.width = (w * 3) + 'px';
-      bar.style.height = (h * 100) + '%';
-      bar.style.background = 'rgba(26,39,68,0.6)';
-      bar.style.borderRadius = '0.5px';
-      bar.style.flexShrink = '0';
-      container.appendChild(bar);
+  /* ── Theme switching ── */
+  var themes = ['dark', 'gold', 'frost', 'ember', 'verdant'];
+  var currentTheme = localStorage.getItem('floatTheme') || 'dark';
+  var ticket = document.getElementById('ticket');
+  var dots = document.querySelectorAll('.theme-dot');
+
+  function setTheme(name) {
+    currentTheme = name;
+    ticket.className = 'ticket theme-' + name;
+    dots.forEach(function(d) { d.classList.toggle('active', d.dataset.theme === name); });
+    try { localStorage.setItem('floatTheme', name); } catch(e) {}
+  }
+
+  document.getElementById('themeDots').addEventListener('click', function(e) {
+    var theme = e.target.dataset.theme;
+    if (theme) { setTheme(theme); e.stopPropagation(); }
+  });
+
+  setTheme(currentTheme);
+
+  /* ── Barcode ── */
+  (function() {
+    var c = document.getElementById('barcode');
+    for (var i = 0; i < 40; i++) {
+      var bar = document.createElement('div');
+      var w = Math.random() > 0.7 ? 0.25 : 0.12;
+      var h = 0.35 + Math.random() * 0.65;
+      bar.style.cssText = 'width:' + (w * 3) + 'px;height:' + (h * 100) + '%';
+      c.appendChild(bar);
     }
   })();
 
   /* ── State ── */
-  let floatStart = null;         // Date.now() when flight began
-  let plannedDuration = 0;       // total seconds planned
-  let prevElapsed = null;       // previous s.elapsed value
-  let staleCount = 0;           // consecutive polls with no change
-  let flightActive = false;     // whether we have a flight
-  const STALE_LIMIT = 3;
+  var floatStart = null, plannedDuration = 0, prevElapsed = null;
+  var staleCount = 0, flightActive = false, wasActive = false, chimed = false;
+  var STALE_LIMIT = 30;
 
-  /* ── Click restores main window ── */
-  document.getElementById('ticket').addEventListener('click', function () {
-    try {
-      ipcRenderer.send('window:restoreMain');
-    } catch (e) {
-      // ignore
+  /* ── Build WAV ── */
+  function buildChimeWav() {
+    var sr = 44100, notes = [1047, 1319, 1568, 2093];
+    var noteLen = 0.45, gap = 0.08;
+    var totalDur = notes.length * (noteLen + gap);
+    var numSamples = Math.floor(sr * totalDur);
+    var buf = new ArrayBuffer(44 + numSamples * 2);
+    var dv = new DataView(buf);
+    function w16(o, v) { dv.setUint16(o, v, true); }
+    function w32(o, v) { dv.setUint32(o, v, true); }
+    w32(0, 0x46464952); w32(4, 36 + numSamples * 2); w32(8, 0x45564157);
+    w32(12, 0x20746d66); w32(16, 16); w16(20, 1); w16(22, 1); w32(24, sr); w32(28, sr * 2); w16(32, 2); w16(34, 16);
+    w32(36, 0x61746164); w32(40, numSamples * 2);
+    var off = 44;
+    for (var s = 0; s < numSamples; s++) {
+      var t = s / sr, sample = 0;
+      for (var n = 0; n < notes.length; n++) {
+        var noteStart = n * (noteLen + gap);
+        if (t >= noteStart && t < noteStart + noteLen) {
+          var freq = notes[n];
+          var phase = (t - noteStart) * freq;
+          var tri = 2 * Math.abs(2 * (phase - Math.floor(phase + 0.5))) - 1;
+          var env = 1 - Math.pow((t - noteStart) / noteLen, 1.5);
+          sample += tri * env * 0.5;
+        }
+      }
+      sample = Math.max(-1, Math.min(1, sample));
+      dv.setInt16(off, Math.floor(sample * 28000), true);
+      off += 2;
     }
-  });
+    return new Blob([buf], { type: 'audio/wav' });
+  }
+
+  var chimeUrl = null;
+  function playChime() {
+    try {
+      if (!chimeUrl) chimeUrl = URL.createObjectURL(buildChimeWav());
+      var a = new Audio(chimeUrl); a.volume = 0.9;
+      a.play().catch(function() {});
+    } catch(e) {}
+  }
 
   /* ── DOM helpers ── */
-  const $ = id => document.getElementById(id);
-  const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+  var $ = function(id) { return document.getElementById(id); };
+  var setText = function(id, val) { var el = $(id); if (el) el.textContent = val; };
 
   /* ── Timer tick ── */
   function tick() {
     if (!flightActive) return;
-    const now = Date.now();
-    const elapsedLocal = (now - floatStart) / 1000;
-    const remaining = Math.max(0, plannedDuration - elapsedLocal);
-    const rm = Math.floor(remaining / 60);
-    const rs = Math.floor(remaining % 60);
+    var now = Date.now();
+    var elapsedLocal = (now - floatStart) / 1000;
+    var remaining = Math.max(0, plannedDuration - elapsedLocal);
+    var rm = Math.floor(remaining / 60), rs = Math.floor(remaining % 60);
     setText('timerDisplay', String(rm).padStart(2, '0') + ':' + String(rs).padStart(2, '0'));
 
-    const pct = Math.min(100, Math.round((elapsedLocal / plannedDuration) * 100));
-    const fill = $('progressFill');
-    if (fill) fill.style.width = pct + '%';
+    var pct = Math.min(100, Math.round((elapsedLocal / plannedDuration) * 100));
+    var fill = $('progressFill'); if (fill) fill.style.width = pct + '%';
+    var plane = $('progressPlane'); if (plane) plane.style.left = pct + '%';
     setText('progressPct', pct + '%');
 
-    /* chime when countdown reaches 0 */
-    if (remaining <= 0 && plannedDuration > 0) {
-      try {
-        new Audio('./chime.wav').play();
-      } catch (e) { /* ignore */ }
+    if (remaining <= 0 && plannedDuration > 0 && !chimed) {
+      chimed = true; playChime();
+      setTimeout(function() { try { ipcRenderer.send('flight:completeFromFloat'); } catch(e) {} }, 400);
     }
   }
 
-  /* ── Poll flight state from main process ── */
+  function resetUI() {
+    flightActive = false; floatStart = null; plannedDuration = 0; chimed = false;
+    setText('fromCode', '---'); setText('toCode', '---');
+    setText('fromName', 'Departure'); setText('toName', 'Arrival');
+    setText('flightNumber', '---'); setText('timerDisplay', '--:--');
+    setText('progressFrom', '---'); setText('progressTo', '---');
+    setText('progressPct', '0%');
+    var fill = $('progressFill'); if (fill) fill.style.width = '0%';
+    var plane = $('progressPlane'); if (plane) plane.style.left = '0%';
+    setText('cabinBadge', 'ECONOMY');
+    prevElapsed = null; staleCount = 0;
+  }
+
+  /* ── Poll ── */
   async function poll() {
     try {
-      const s = await ipcRenderer.invoke('getFlightState');
-      if (!s || !s.currentFlight) {
-        /* No active flight ── show placeholders */
-        flightActive = false;
-        floatStart = null;
-        plannedDuration = 0;
-        setText('fromCode', '---');
-        setText('toCode', '---');
-        setText('fromName', 'Departure');
-        setText('toName', 'Arrival');
-        setText('flightNumber', '---');
-        setText('timerDisplay', '--:--');
-        setText('progressFrom', '---');
-        setText('progressTo', '---');
-        setText('progressPct', '0%');
-        const fill = $('progressFill');
-        if (fill) fill.style.width = '0%';
-        setText('cabinBadge', 'ECONOMY');
-        prevElapsed = null;
-        staleCount = 0;
-        return;
+      var s = await ipcRenderer.invoke('getFlightState');
+      if (!s || !s.isFlying) {
+        if (wasActive) { wasActive = false; if (!chimed) playChime(); setTimeout(function() { resetUI(); try { ipcRenderer.send('window:restoreMain'); } catch(e) {} }, chimed ? 800 : 2200); return; }
+        wasActive = false; resetUI(); return;
       }
+      wasActive = true; flightActive = true;
+      setText('fromCode', s.departureCityCode || '---');
+      setText('toCode', s.arrivalCityCode || '---');
+      setText('fromName', s.departureCityName || 'Departure');
+      setText('toName', s.arrivalCityName || 'Arrival');
+      setText('flightNumber', s.flightNumber || '---');
+      setText('progressFrom', s.departureCityName || '');
+      setText('progressTo', s.arrivalCityName || '');
 
-      flightActive = true;
-      const f = s.currentFlight;
-
-      /* Update route info */
-      setText('fromCode', (f.departureCityCode || '---'));
-      setText('toCode', (f.arrivalCityCode || '---'));
-      setText('fromName', (f.departureCityName || 'Departure'));
-      setText('toName', (f.arrivalCityName || 'Arrival'));
-      setText('flightNumber', (f.flightNumber || '---'));
-      setText('progressFrom', (f.departureCityName || ''));
-      setText('progressTo', (f.arrivalCityName || ''));
-
-      /* Cabin class via stats */
-      const totalMileage = s.stats ? s.stats.totalMileage : 0;
-      /* mirror the logic from getCabinClassForMileage */
-      let cabin = 'ECONOMY';
-      if (totalMileage >= 10000000) cabin = 'LEGENDARY';
-      else if (totalMileage >= 5000000) cabin = 'CAPTAIN';
-      else if (totalMileage >= 1000000) cabin = 'FIRST';
-      else if (totalMileage >= 500000) cabin = 'BUSINESS';
+      var dur = s.plannedDuration ? s.plannedDuration / 60 : 0;
+      var cabin = dur >= 120 ? 'RATING: 👑' : dur >= 60 ? 'RATING: ⭐⭐⭐' : dur >= 25 ? 'RATING: ⭐⭐' : 'RATING: ⭐';
       setText('cabinBadge', cabin);
 
-      /* Initialize local timer on first poll or when flight changes */
       if (!floatStart || s.elapsed === 0) {
         floatStart = Date.now() - (s.elapsed * 1000);
-        plannedDuration = f.plannedDuration;
+        plannedDuration = s.plannedDuration;
+        chimed = false;
       }
-
-      /* Stale detection ── if elapsed hasn't changed, count */
-      if (prevElapsed !== null && s.elapsed === prevElapsed) {
-        staleCount++;
-        if (staleCount >= STALE_LIMIT) {
-          ipcRenderer.send('window:restoreMain');
-          staleCount = 0;
-        }
-      } else {
-        staleCount = 0;
-      }
+      if (prevElapsed !== null && s.elapsed === prevElapsed) { staleCount++; if (staleCount >= STALE_LIMIT) { ipcRenderer.send('window:restoreMain'); staleCount = 0; } }
+      else { staleCount = 0; }
       prevElapsed = s.elapsed;
-
-      /* If plannedDuration is available, run the local tick */
-      if (plannedDuration > 0) {
-        tick();
-      }
-
-    } catch (e) {
-      // poll failed, do nothing
-    }
+      if (plannedDuration > 0) tick();
+    } catch (e) {}
   }
 
-  /* ── Start polling ── */
+  /* ── Click ticket body restores main window (not clicking dots) ── */
+  ticket.addEventListener('click', function(e) {
+    if (e.target.closest('.theme-dots')) return;
+    try { ipcRenderer.send('window:restoreMain'); } catch (e) {}
+  });
+
   setInterval(poll, 1000);
-  poll(); // immediate first poll
+  poll();
 </script>
 </body>
 </html>

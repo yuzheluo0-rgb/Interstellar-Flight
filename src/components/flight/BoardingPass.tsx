@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { CabinClass, FlightType } from '../../utils/mileage';
-import { getRankForMileage } from '../../utils/mileage';
+import { getRatingForDuration } from '../../utils/mileage';
+import { getCityById } from '../../data/routes';
 
 interface BoardingPassProps {
   flightNumber: string;
@@ -12,6 +13,7 @@ interface BoardingPassProps {
   estimatedMileage: number;
   streak: number;
   totalMileage: number;
+  seatNumber: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -31,14 +33,6 @@ const TYPE_LABELS: Record<FlightType, string> = {
   reading: 'READING',
 };
 
-const SEATS: Record<CabinClass, string> = {
-  economy: '26A',
-  business: '8A',
-  first: '2A',
-  captain: 'CAP',
-  legendary: 'VIP',
-};
-
 function formatDuration(seconds: number): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -55,6 +49,7 @@ export default function BoardingPass({
   estimatedMileage,
   streak,
   totalMileage,
+  seatNumber,
   onConfirm,
   onCancel,
 }: BoardingPassProps) {
@@ -76,14 +71,19 @@ export default function BoardingPass({
   );
   const boardingTime = useMemo(() => {
     const d = new Date();
-    d.setMinutes(d.getMinutes() + 15);
-    return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
   }, []);
-  const today = useMemo(
-    () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    [],
-  );
-  const rank = getRankForMileage(totalMileage);
+  const today = useMemo(() => {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }, []);
+  const rating = getRatingForDuration(plannedDuration / 60);
+  const dep = getCityById(departureCity);
+  const arr = getCityById(arrivalCity);
+  const depCode = dep?.code || departureCity;
+  const arrCode = arr?.code || arrivalCity;
+  const depName = dep?.name || departureCity;
+  const arrName = arr?.name || arrivalCity;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
@@ -105,9 +105,10 @@ export default function BoardingPass({
 
           {/* Route: departure -> arrival */}
           <div className="flex items-center justify-center gap-3 mb-4">
-            <span className="text-[28px] font-black tracking-tight text-blue-900">
-              {departureCity}
-            </span>
+            <div className="flex flex-col items-center">
+              <span className="text-[28px] font-black tracking-tight text-blue-900">{depCode}</span>
+              <span className="text-[9px] text-slate-500 mt-0.5">{depName}</span>
+            </div>
             <div className="flex flex-col items-center gap-0.5">
               <span className="text-[10px] font-mono text-blue-700/70">{flightNumber}</span>
               <div className="flex items-center gap-1 text-blue-400">
@@ -119,9 +120,10 @@ export default function BoardingPass({
               </div>
               <span className="text-[10px] font-mono text-blue-700/70">{formatDuration(plannedDuration)}</span>
             </div>
-            <span className="text-[28px] font-black tracking-tight text-blue-900">
-              {arrivalCity}
-            </span>
+            <div className="flex flex-col items-center">
+              <span className="text-[28px] font-black tracking-tight text-blue-900">{arrCode}</span>
+              <span className="text-[9px] text-slate-500 mt-0.5">{arrName}</span>
+            </div>
           </div>
 
           {/* Dashed tear line with half-circle cutouts */}
@@ -131,40 +133,44 @@ export default function BoardingPass({
             <div className="absolute -right-[10px] -top-[10px] w-5 h-5 rounded-full bg-black/60" />
           </div>
 
-          {/* Info grid: 8 cells in 4-column layout */}
-          <div className="grid grid-cols-4 gap-x-2 gap-y-3 text-[11px] mb-4">
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Passenger</div>
-              <div className="font-bold text-slate-800">ZHU SHEN</div>
+          {/* Info grid: 3×2 */}
+          <div className="grid grid-cols-3 gap-x-3 gap-y-3 text-[11px] mb-4">
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Seat</div>
+              <div className="font-bold text-slate-800 text-sm">{seatNumber}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Seat</div>
-              <div className="font-bold text-slate-800">{SEATS[cabinClass]}</div>
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Gate</div>
+              <div className="font-bold text-slate-800 text-sm">{gate}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Gate</div>
-              <div className="font-bold text-slate-800">{gate}</div>
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Zone</div>
+              <div className="font-bold text-slate-800 text-sm">{zone}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Zone</div>
-              <div className="font-bold text-slate-800">{zone}</div>
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Date</div>
+              <div className="font-bold text-slate-800 text-sm">{today}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Date</div>
-              <div className="font-bold text-slate-800">{today}</div>
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Boarding</div>
+              <div className="font-bold text-slate-800 text-sm">{boardingTime}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Boarding</div>
-              <div className="font-bold text-slate-800">{boardingTime}</div>
+            <div className="bg-white/60 rounded-lg p-2">
+              <div className="text-[8px] font-semibold text-slate-400 tracking-wider uppercase">Type</div>
+              <div className="font-bold text-slate-800 text-sm">{TYPE_LABELS[flightType]}</div>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Flight Type</div>
-              <div className="font-bold text-slate-800">{TYPE_LABELS[flightType]}</div>
+          </div>
+
+          {/* Mileage + Rank */}
+          <div className="flex items-center justify-between bg-white/50 rounded-xl px-4 py-2.5 mb-3">
+            <div className="flex items-center gap-3 text-[10px]">
+              <span className="text-amber-600 font-bold">&#9733; {estimatedMileage.toLocaleString()} miles</span>
+              <span className="text-slate-300">|</span>
+              <span className="text-slate-500">Streak <span className="font-bold text-orange-500">{streak}</span></span>
+              <span className="text-slate-300">|</span>
+              <span className="text-slate-500">Total <span className="font-bold text-slate-700">{totalMileage.toLocaleString()}</span></span>
             </div>
-            <div>
-              <div className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase">Rank</div>
-              <div className="font-bold text-slate-800">{rank.nameEn.toUpperCase()}</div>
-            </div>
+            <span className="text-sm">{rating.icon} <span className="text-[9px] text-slate-500">{rating.label}</span></span>
           </div>
 
           {/* Barcode */}
@@ -179,21 +185,6 @@ export default function BoardingPass({
           </div>
           <div className="text-center text-[10px] font-mono tracking-[4px] text-slate-500">
             {bookingRef}
-          </div>
-
-          {/* Mileage info */}
-          <div className="flex items-center justify-center gap-4 mt-3 text-xs">
-            <span className="text-amber-600 font-bold">
-              &#9733; {estimatedMileage.toLocaleString()} miles
-            </span>
-            <span className="text-slate-400">|</span>
-            <span className="text-slate-600">
-              Streak: <span className="font-bold text-orange-500">{streak}</span>
-            </span>
-            <span className="text-slate-400">|</span>
-            <span className="text-slate-600">
-              Total: <span className="font-bold">{totalMileage.toLocaleString()}</span>
-            </span>
           </div>
         </div>
 
